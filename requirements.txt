@@ -3,3 +3,7 @@ uvicorn
 pyyaml
 requests
 beautifulsoup4
+numpy
+sklearn
+pandas
+bs4
