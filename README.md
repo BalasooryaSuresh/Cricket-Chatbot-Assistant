@@ -1,113 +1,113 @@
-# 🏏 Fantasy Cricket Chatbot Assistant
+Fantasy Cricket Chatbot
+Overview
+The Fantasy Cricket Chatbot is a web-based application built with FastAPI that provides fantasy cricket recommendations, live cricket scores, player statistics, and a leaderboard. It uses machine learning (GradientBoostingRegressor) to predict player performance based on historical match data from CricSheet. The frontend is a simple HTML interface, and the backend processes user queries to recommend players, display live scores, and provide role-based statistics.
+Features
 
-A smart, fully open-source conversational assistant that helps users make better Fantasy Cricket decisions using real historical cricket data and live score scraping — all from free sources like [CricSheet](https://cricsheet.org) and Cricbuzz.
+Player Recommendations: Suggests top-performing players (batsmen or bowlers) based on historical performance.
+Live Scores: Fetches real-time cricket match scores from CricBuzz.
+Role-wise Statistics: Displays average points per role (e.g., batsman, bowler).
+Fuzzy Player Search: Allows searching for players with approximate name matching.
+Leaderboard: Shows the top 10 players by average fantasy points.
+Model Retraining: Supports refreshing the ML model with updated data.
 
----
+Project Structure
 
-## 📦 Features
+fantasy_cricket_chatbot.py: The main FastAPI application file that defines API endpoints, serves the frontend, and handles user queries.
+utils.py: Contains utility functions for data parsing, model training, live score fetching, and FAQ handling.
+index.html: The frontend HTML file provides a user interface for interacting with the chatbot.
+requirements.txt: Lists the Python dependencies required to run the project.
+data/cricsheet: Directory (not included) where CricSheet YAML files should be placed for model training.
+model.pkl: Stores the trained ML model, player lookup, and roles (generated after training).
+leaderboard.json: Stores the leaderboard data (generated after training).
+performance_plot.png: A plot of model prediction performance (generated after training).
 
-* Conversational chatbot using FastAPI
-* Fantasy point recommendations (batting, bowling, fielding)
-* Data sourced from free YAML files (CricSheet)
-* Live scores scraped from Cricbuzz
-* Simple, clean HTML + Tailwind frontend with visual chart support (Chart.js)
-* Fully local — no paid APIs or internet dependency once data is downloaded
+Prerequisites
 
----
+Python: Version 3.8 or higher.
+CricSheet Data: Download YAML match data from CricSheet and place it in the ./data/cricsheet directory.
+Internet Connection: Required for fetching live scores from CricBuzz.
 
-## 📁 Project Structure
+Installation
 
-```
-fantasy-cricket-chatbot/
-├── data/
-│   └── cricsheet/           # YAML files from cricsheet.org
-├── fantasy_cricket_chatbot.py  # FastAPI backend
-├── utils.py                    # Data parser, recommender, scraper
-├── frontend.html               # Simple browser chat UI
-├── requirements.txt
-└── README.md
-```
+Clone the Repository (if applicable) or ensure all provided files are in the project directory.
+Create a Virtual Environment (optional but recommended):python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
----
 
-## 🚀 Getting Started
+Install Dependencies:pip install -r requirements.txt
 
-### 1️⃣ Clone and Set Up Environment
 
-```bash
-git clone https://github.com/your-repo/fantasy-cricket-chatbot.git
-cd fantasy-cricket-chatbot
-python -m venv venv
-source venv/bin/activate   # On Windows use `venv\Scripts\activate`
-pip install -r requirements.txt
-```
+Prepare Data:
+Create a ./data/cricsheet directory.
+Download and extract CricSheet YAML files into ./data/cricsheet.
 
-### 2️⃣ Download Match Data (YAML)
 
-1. Go to [https://cricsheet.org/downloads/](https://cricsheet.org/downloads/)
-2. Download a ZIP like:
 
-   * **All T20 matches (YAML)**
-   * **IPL matches (YAML)**
-3. Unzip and place `.yaml` files inside `data/cricsheet/`
+Running the Application
 
-### 3️⃣ Run the Backend
+Run the main script:python fantasy_cricket_chatbot.py
 
-```bash
-uvicorn fantasy_cricket_chatbot:app --reload
-```
 
-### 4️⃣ Open the Frontend
+The application will start a FastAPI server at http://127.0.0.1:8000 and automatically open the interface in your default browser.
+Interact with the chatbot via the web interface or API endpoints.
 
-Just double-click `frontend.html` or open it in a browser.
+Usage
+Web Interface
 
-You can now chat with:
+Chat: Enter queries like "recommend batsman", "live scores", or "how does scoring work" in the chat input box.
+Role Stats: View average points for batsmen and bowlers (updates on button click).
+Fuzzy Search: Search for players by name with approximate matching.
+Leaderboard: View the top 10 players by average fantasy points.
+Model Refresh: Retrain the ML model with updated data.
 
-* "Recommend a batsman"
-* "Show live score"
-* "How does fantasy scoring work?"
+API Endpoints
 
----
+GET /: Serves the index.html frontend.
+POST /chat: Processes user queries (e.g., {"query": "recommend batsman"}).
+GET /leaderboard: Returns the top 10 players in JSON format.
+GET /role-stats: Returns average points per player role.
+GET /refresh: Retrains the ML model.
+GET /fuzzy-player?q=<player_name>: Returns up to 5 player names matching the query.
 
-## ⚙️ Fantasy Scoring Rules
+Example Queries
 
-| Event              | Points |
-| ------------------ | ------ |
-| Run                | +1     |
-| Four               | +1     |
-| Six                | +2     |
-| Wicket             | +25    |
-| Catch              | +8     |
-| Stumping / Run Out | +12    |
+"Recommend batsman" → Lists top 5 batsmen with predicted fantasy points.
+"Live scores" → Fetches current match scores from CricBuzz.
+"How does scoring work" → Explains the fantasy points system.
+"Leaderboard" → Displays top players from leaderboard.json.
 
----
+Scoring System
 
-## 📊 Chart Integration
+Batting: 1 point per run, +1 for a four, +2 for a six.
+Bowling: 25 points per wicket.
+Fielding: 8 points for a catch, 12 points for a stumping or run-out.
 
-If the bot's reply includes fantasy scores like:
+Model Details
 
-```
-- Player: 420 fantasy points
-```
+Algorithm: GradientBoostingRegressor from scikit-learn.
+Features: Average and standard deviation of a player's last 10 performances.
+Data: CricSheet YAML files containing match deliveries.
+Output: Predicted fantasy points for each player.
 
-it will automatically plot a bar chart below the chat using Chart.js.
+Notes
 
----
+Ensure the ./data/cricsheet directory contains valid YAML files for model training.
+The model is trained on startup if model.pkl does not exist, which may take time depending on the data size.
+Live scores depend on CricBuzz availability and may fail if the site is down or the structure changes.
+The frontend is basic and can be enhanced with CSS/JavaScript for better styling and interactivity.
 
-## 🧪 Example Commands
+Troubleshooting
 
-* `Recommend a batsman`
-* `Show live score`
-* `How does scoring work?`
+Model Training Fails: Check that ./data/cricsheet contains valid YAML files and that dependencies like numpy and sklearn are installed.
+Live Scores Error: Verify internet connectivity and CricBuzz site availability.
+CORS Issues: The CORS middleware allows all origins (*), but you can restrict it in fantasy_cricket_chatbot.py if needed.
 
----
+Future Improvements
 
-## 🤝 Contributions
+Enhance the frontend with CSS and JavaScript for a better user experience.
+Add support for more complex queries (e.g., team-specific recommendations).
+Implement caching for live scores to reduce API calls.
+Expand the FAQ system with more questions and answers.
 
-Want to add filters, team builder, or player-vs-player comparisons? Fork it and PR away!
-
----
-
-## 🛡️ License
-
-MIT — free to use and modify with attribution.
+License
+This project is provided as-is for educational purposes. Ensure compliance with CricSheet and CricBuzz terms of use for data and API access.
